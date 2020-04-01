@@ -6,7 +6,7 @@ import com.zhaoxin.spring.service.AccountService;
 import java.util.Date;
 import java.util.List;
 
-public class AccountServiceImpl  implements AccountService {
+public class AccountServiceImpl2 implements AccountService {
 
     private String name;
 
@@ -14,13 +14,19 @@ public class AccountServiceImpl  implements AccountService {
 
     private Date birthday;
 
-    public AccountServiceImpl(String name, Integer age, Date birthday) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
-    public AccountServiceImpl() {
+    public AccountServiceImpl2() {
         System.out.println("创建了");
     }
 

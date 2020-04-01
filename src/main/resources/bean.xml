@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--    spring对bean的管理细节
             1.创建bean的三种方式：
@@ -31,15 +35,93 @@
                  死亡：当对象长时间不用且没有别的对象使用时java的垃圾回收器回收
     />
     -->
-    <bean id="accountService" class="com.zhaoxin.spring.service.impl.AccountServiceImpl"
-        init-method="saveAccount" destroy-method="saveAccount"/>
-    <bean id="accountDao" class="com.zhaoxin.spring.dao.impl.AccountDaoImpl"/>
+    <!--    <bean id="accountService" class="com.zhaoxin.spring.service.impl.AccountServiceImpl"-->
+    <!--        init-method="saveAccount" destroy-method="saveAccount"/>-->
+    <!--    默认构造器-->
+    <!--    <bean id="accountDao" class="com.zhaoxin.spring.dao.impl.AccountDaoImpl"/>-->
+    <!--    工厂方法-->
+    <!--    <bean id="instanceFactory" class="com.zhaoxin.spring.client.InstanceFactory"/>-->
+    <!--    <bean id="accountService1" factory-bean="instanceFactory" factory-method="getAccountService"/>-->
 
-    <bean id="instanceFactory" class="com.zhaoxin.spring.client.InstanceFactory"/>
-    <bean id="accountService1" factory-bean="instanceFactory" factory-method="getAccountService"/>
+    <!--        静态工厂方法-->
+    <!--    <bean id="accountService2" class="com.zhaoxin.spring.client.StaticFactory" factory-method="getAccountService"/>-->
 
+    <!--    spring的依赖注入-->
+    <!--            降低程序之间的耦合（依赖关系）-->
+    <!--                依赖关系的管理交给spring-->
+    <!--            能注入的数据有三类：-->
+    <!--                基本数据类型和string-->
+    <!--                其他bean类型（配置文件活着注解配置过得bean）-->
+    <!--                复杂类型/集合类型-->
+    <!--            注入的方式：有三种-->
+    <!--                构造器函数注入-->
+    <!--                set方法-->
+    <!--                注解提供-->
 
-    <bean id="accountService2" class="com.zhaoxin.spring.client.StaticFactory" factory-method="getAccountService"/>
+    <!--            type:注入数据的类型-->
+    <!--            index:参数索引位置-->
+    <!--            name:构造函数中指定名称的参数赋值-->
+    <!--            value:-->
+    <!--            ref：-->
+    <!--    <bean id="accountService" class="com.zhaoxin.spring.service.impl.AccountServiceImpl">-->
+    <!--        <constructor-arg name="age" value="18"></constructor-arg>-->
+    <!--        <constructor-arg name="name" value="zhaoxin"></constructor-arg>-->
+    <!--        <constructor-arg name="birthday" ref="now"></constructor-arg>-->
+    <!--    </bean>-->
+    <!--    <bean id="now" class="java.util.Date"></bean>-->
+    <!--    <bean id="accountServiceImpl2" class="com.zhaoxin.spring.service.impl.AccountServiceImpl2">-->
+    <!--&lt;!&ndash;        set方法：property&ndash;&gt;-->
+    <!--        <property name="name" value="zhaoxin2"></property>-->
+    <!--        <property name="age" value="19"></property>-->
+    <!--        <property name="birthday" ref="now"></property>-->
+    <!--    </bean>-->
+    <!--    <bean id="accountServiceImpl3" class="com.zhaoxin.spring.service.impl.AccountServiceImpl3">-->
+    <!--        <property name="myStr">-->
+    <!--            <array>-->
+    <!--                <value>aaaa</value>-->
+    <!--                <value>bbbb</value>-->
+    <!--                <value>cccc</value>-->
+    <!--            </array>-->
+    <!--        </property>-->
+    <!--        <property name="mylist">-->
+    <!--            <list>-->
+    <!--                <value>aaaa</value>-->
+    <!--                <value>bbbb</value>-->
+    <!--                <value>cccc</value>-->
+    <!--            </list>-->
+    <!--        </property>-->
+    <!--        <property name="mySet">-->
+    <!--            <set>-->
+    <!--                <value>aaaa</value>-->
+    <!--                <value>bbbb</value>-->
+    <!--                <value>cccc</value>-->
+    <!--            </set>-->
+    <!--        </property>-->
+    <!--        <property name="myMap">-->
+    <!--            <map>-->
+    <!--                <entry key="aaa:" value="AAAA"></entry>-->
+    <!--                <entry key="bbb:" value="BBBB"></entry>-->
+    <!--                <entry key="ccc:" value="CCCC"></entry>-->
+    <!--            </map>-->
+    <!--        </property>-->
+    <!--    </bean>-->
 
+    <!--    扫描的包告知spring，不在bean里，在context里的-->
+    <!--    <context:component-scan base-package="com.zhaoxin.spring"></context:component-scan>-->
+    <bean id="accountServiceImplDemo" class="com.zhaoxin.spring.service.impl.AccountServiceImplDemo">
+        <property name="accoutDao" ref="accoutDao"></property>
+    </bean>
+    <bean id="accoutDao" class="com.zhaoxin.spring.dao.impl.AccountDaoImplDemo">
+        <property name="queryRunner" ref="queryRunner"></property>
+    </bean>
+    <bean id="queryRunner" class="org.apache.commons.dbutils.QueryRunner">
+        <constructor-arg name="ds" ref="dataSource"></constructor-arg>
+    </bean>
 
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/eesy"></property>
+        <property name="user" value="root"></property>
+        <property name="password" value="123456"></property>
+    </bean>
 </beans>
